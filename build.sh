@@ -10,18 +10,10 @@ IMAGE=${IMAGE:="$IMAGE_REGISTRY/$IMAGE_REPOSITORY:$IMAGE_TAG"}
 
 echo "IMAGE=$IMAGE"
 
-# DIFF: use buildx for multi-platform images
-docker buildx install
-docker buildx rm multiplatform
-docker buildx create --use --name multiplatform
-
-# DIFF: removed extraneous build-args, added platforms list, combined push
-docker buildx build \
+# due to some unknown reason, copying symlinks fails with buildkit enabled
+DOCKER_BUILDKIT=0 docker build \
   --build-arg K3S_TAG=$K3S_TAG \
-  --platform linux/amd64,linux/arm64 \
-  -t $IMAGE \
-  --push .
-
-docker buildx rm multiplatform
+  -t $IMAGE .
+docker push $IMAGE
 
 echo "Done!"
