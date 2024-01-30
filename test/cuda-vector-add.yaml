@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: gpu-pod
+  name: gpu
 spec:
   restartPolicy: Never
   containers:
